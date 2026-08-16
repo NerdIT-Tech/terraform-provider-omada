@@ -1,0 +1,83 @@
+name: "Feature Request"
+description: Request a new capability or enhancement (e.g. a resource, data source, provider config option).
+title: "[Feature]: "
+labels: ["type: feature", "state: new"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to request a feature! The more concrete the "so that" clause and
+        acceptance criteria, the faster this can be scoped and picked up.
+
+  - type: textarea
+    id: user-story
+    attributes:
+      label: User Story
+      description: State this as "As a <persona>, I want <capability>, so that <outcome>."
+      placeholder: |
+        As a Terraform user managing an Omada deployment,
+        I want an `omada_site` resource,
+        so that I can provision sites declaratively instead of via the controller UI.
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What can't you do today? What's the workaround, if any?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance Criteria
+      description: A short checklist helps scope the work and know when it's finished.
+      placeholder: |
+        - [ ] Behavior X is implemented
+        - [ ] Unit tests cover happy path + at least one error case
+        - [ ] docs/ is regenerated and documents the change
+    validations:
+      required: false
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed Solution (optional)
+    validations:
+      required: false
+
+  - type: dropdown
+    id: module
+    attributes:
+      label: Affected Area
+      options:
+        - provider schema / configuration
+        - resources
+        - data sources
+        - docs generation
+        - CI / GitHub
+        - documentation
+        - all / cross-cutting
+        - other / not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Links to related issues/PRs, relevant Omada API docs, etc.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues (including closed ones) for a duplicate of this request.
+          required: true
+        - label: I checked the latest release to confirm this doesn't already exist.
+          required: true

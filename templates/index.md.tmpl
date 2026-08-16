@@ -1,0 +1,30 @@
+---
+page_title: "{{.ProviderShortName}} Provider"
+description: |-
+{{ .Description | plainmarkdown | trimspace | prefixlines "  " }}
+---
+
+# {{.ProviderShortName}} Provider
+
+{{ .Description | trimspace }}
+
+## Example Usage
+
+{{ tffile "examples/provider/provider.tf" }}
+
+{{ .SchemaMarkdown | trimspace }}
+
+## Authentication
+
+The provider authenticates to the Omada Controller's OpenAPI using a
+client ID and secret issued to an Omada Open API application, scoped to a
+specific controller (`omadac_id`). Credentials can be supplied either
+directly in the provider block or via environment variables:
+
+- `OMADA_HOST`
+- `OMADA_CLIENT_ID`
+- `OMADA_CLIENT_SECRET`
+- `OMADA_OMADAC_ID`
+
+Environment variables are recommended so credentials are not committed to
+version control.

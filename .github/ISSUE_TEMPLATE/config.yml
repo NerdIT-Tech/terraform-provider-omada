@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a Security Vulnerability
+    url: https://github.com/NerdIT-Tech/terraform-provider-omada/security/advisories/new
+    about: Do not file a public issue for security vulnerabilities — use a private security advisory instead. See SECURITY.md.
+  - name: Search Existing Issues
+    url: https://github.com/NerdIT-Tech/terraform-provider-omada/issues?q=is%3Aissue
+    about: Please search open and closed issues before filing a new one — your report may already exist.

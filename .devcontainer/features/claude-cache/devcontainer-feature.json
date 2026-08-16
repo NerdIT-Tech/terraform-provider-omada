@@ -1,0 +1,7 @@
+{
+    "id": "claude-cache",
+    "version": "1.0.0",
+    "name": "Persist Claude Code cache",
+    "description": "Ensures the remote user's ~/.claude directory exists with correct ownership before it is mounted as a persistent named volume, so Claude Code's settings, credentials, and memory survive container rebuilds. Pair with a matching 'mounts' entry in devcontainer.json -- this feature only prepares the directory, it does not declare the mount itself.",
+    "options": {}
+}

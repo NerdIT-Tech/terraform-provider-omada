@@ -1,0 +1,47 @@
+{
+  "name": "ServiceNow SDK Go",
+  "dockerComposeFile": "podman-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspaces/terraform-provider-omada",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "go.toolsManagement.checkForUpdates": "local",
+        "go.useLanguageServer": true,
+        "go.gopath": "/go",
+        "go.testTimeout": "30s",
+        "go.lintOnSave": "package",
+        "go.lintTool": "golangci-lint",
+        "go.formatTool": "gofmt",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+          "source.organizeImports": "always"
+        }
+      },
+      "extensions": [
+        "golang.go"
+      ]
+    }
+  },
+  "remoteUser": "vscode",
+  "postCreateCommand": "just --version",
+  "features": {
+    "./features/xdg-utils": {},
+    "./features/go-cache": {},
+    "ghcr.io/devcontainers/features/terraform:1": {},
+    "ghcr.io/roul/devcontainer-features/bitwarden-cli:1": {},
+    "./features/claude-cache": {},
+    "ghcr.io/devcontainers/features/aws-cli:1": {},
+    "ghcr.io/devcontainers-extra/features/tflint:1": {},
+    "ghcr.io/jasonthedeveloper/features/trivy:1": {},
+    "ghcr.io/devcontainers-extra/features/claude-code:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/powershell:2": {
+      "version": "latest"
+    },
+    "ghcr.io/guiyomh/features/just:0": {}
+  },
+  "containerUser": "vscode"
+}

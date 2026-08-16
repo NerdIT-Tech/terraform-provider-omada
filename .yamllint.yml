@@ -1,0 +1,17 @@
+extends: default
+
+rules:
+  # GitHub Actions files aren't meant to start with "---".
+  document-start: disable
+  # `on:` as a top-level key gets misparsed as the boolean `true` by YAML 1.1
+  # loaders unless we tell yamllint it's a key, not a value.
+  truthy:
+    check-keys: false
+  # SHA-pinned `uses:` lines (`owner/repo@<sha> # vX.Y.Z`) are long by
+  # convention — wrapping them for an 80-char limit hurts readability more
+  # than it helps.
+  line-length:
+    max: 200
+  # Actions convention is a single space before an inline `# vX` comment.
+  comments:
+    min-spaces-from-content: 1
