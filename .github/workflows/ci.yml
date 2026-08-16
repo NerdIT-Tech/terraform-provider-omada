@@ -143,6 +143,9 @@ jobs:
           delete: true
 
       - name: Upload coverage to Codecov
+        # Non-blocking until CODECOV_TOKEN is provisioned (see SECURITY.md /
+        # repo setup follow-ups) — a missing/failed upload shouldn't fail Test.
+        continue-on-error: true
         uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7
         with:
           files: ./${{ env.COVERAGE_FILE }}
