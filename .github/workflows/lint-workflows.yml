@@ -1,0 +1,57 @@
+name: Lint Workflows
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - "**.yml"
+      - "**.yaml"
+      - ".yamllint.yml"
+      - ".github/workflows/lint-workflows.yml"
+
+permissions: {}
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        with:
+          go-version: "stable"
+          cache: false
+
+      - name: Install actionlint
+        run: go install github.com/rhysd/actionlint/cmd/actionlint@v1.7.12
+
+      # ubuntu-latest ships shellcheck; actionlint auto-detects it on PATH and
+      # lints embedded `run:` bash blocks as part of the same pass.
+      - name: Run actionlint
+        run: actionlint -color
+
+  yamllint:
+    name: yamllint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      - name: Install yamllint
+        run: pip install --disable-pip-version-check yamllint==1.37.1
+
+      - name: Run yamllint
+        run: yamllint -c .yamllint.yml .

@@ -1,0 +1,47 @@
+name: OSSF Scorecard
+
+on:
+  branch_protection_rule:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '30 4 * * 2' # Weekly, Tuesday 04:30 UTC
+
+permissions: {}
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+    permissions:
+      # Required to read branch protection settings and publish results.
+      security-events: write
+      id-token: write
+      contents: read
+      actions: read
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@5c7944e73c4c2a096b17a9cb74d65b6c2bbafbde # v2.9.1
+        with:
+          egress-policy: audit
+
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - name: Run analysis
+        uses: ossf/scorecard-action@55891bbd73f2425e97637d96e306fc9d491d0b21 # v2.4.4
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          # Enables the Branch-Protection check (needs admin read access on
+          # the repo). Falls back to GITHUB_TOKEN's default access if unset;
+          # remove this input if you don't want to provision a PAT.
+          repo_token: ${{ secrets.SCORECARD_TOKEN }}
+          publish_results: true
+
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@67ba681cdcbc95ed0371c210ccf82c4d968ae5eb # v3.37.7
+        with:
+          sarif_file: results.sarif
