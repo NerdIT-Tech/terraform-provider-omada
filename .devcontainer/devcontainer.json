@@ -34,7 +34,7 @@
     "ghcr.io/devcontainers/features/aws-cli:1": {},
     "ghcr.io/devcontainers-extra/features/tflint:1": {},
     "ghcr.io/jasonthedeveloper/features/trivy:1": {},
-    "ghcr.io/devcontainers-extra/features/claude-code:1": {},
+    "ghcr.io/devcontainers-extra/features/claude-code:2": {},
     "ghcr.io/devcontainers/features/github-cli:1": {
       "version": "latest"
     },
