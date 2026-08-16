@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"net/http"
 	"os"
 
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
@@ -11,6 +12,8 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/resource"
 	"github.com/hashicorp/terraform-plugin-framework/types"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
+
+	omadasdk "github.com/NerdIT-Tech/tplink-omada-sdk-for-go"
 )
 
 // Ensure the implementation satisfies the expected interfaces.
@@ -32,6 +35,14 @@ type OmadaProviderModel struct {
 	ClientSecret types.String `tfsdk:"client_secret"`
 	OmadacID     types.String `tfsdk:"omadac_id"`
 	Insecure     types.Bool   `tfsdk:"insecure"`
+}
+
+// omadaClient bundles the authenticated SDK client with the omadacID that every
+// Open API call must scope its requests to, so resources and data sources don't each
+// need to carry the ID separately.
+type omadaClient struct {
+	api      *omadasdk.OmadaApiClient
+	omadacID string
 }
 
 // Environment variable fallbacks for provider configuration, mirroring the
@@ -148,26 +159,28 @@ func (p *OmadaProvider) Configure(ctx context.Context, req provider.ConfigureReq
 	ctx = tflog.MaskFieldValuesWithFieldKeys(ctx, "omada_client_secret")
 	tflog.Debug(ctx, "Creating Omada API client")
 
-	// TODO: once github.com/NerdIT-Tech/tplink-omada-sdk-for-go publishes a
-	// client, construct and authenticate it here, then hand it to resources
-	// and data sources via resp.ResourceData / resp.DataSourceData, e.g.:
-	//
-	//   client, err := omadasdk.NewClient(host, clientID, clientSecret, omadacID,
-	//       omadasdk.WithInsecureSkipVerify(data.Insecure.ValueBool()))
-	//   if err != nil {
-	//       resp.Diagnostics.AddError("Unable to Create Omada API Client", err.Error())
-	//       return
-	//   }
-	//   resp.ResourceData = client
-	//   resp.DataSourceData = client
+	var httpClient *http.Client
+	if data.Insecure.ValueBool() {
+		httpClient = omadasdk.NewInsecureHTTPClient()
+	}
+
+	api, err := omadasdk.NewWithClientCredentials(host, clientID, clientSecret, omadacID, httpClient)
+	if err != nil {
+		resp.Diagnostics.AddError("Unable to Create Omada API Client", err.Error())
+		return
+	}
+
+	client := &omadaClient{api: api, omadacID: omadacID}
+	resp.ResourceData = client
+	resp.DataSourceData = client
 
 	tflog.Info(ctx, "Configured Omada provider", map[string]any{"success": true})
 }
 
 func (p *OmadaProvider) Resources(_ context.Context) []func() resource.Resource {
-	// Resources are registered here as they are implemented, e.g.:
-	//   return []func() resource.Resource{ NewSiteResource }
-	return []func() resource.Resource{}
+	return []func() resource.Resource{
+		NewSiteResource,
+	}
 }
 
 func (p *OmadaProvider) DataSources(_ context.Context) []func() datasource.DataSource {
