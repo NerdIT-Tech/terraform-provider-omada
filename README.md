@@ -3,10 +3,9 @@
 Terraform provider for the TP-Link Omada Controller API, built on
 [tplink-omada-sdk-for-go](https://github.com/NerdIT-Tech/tplink-omada-sdk-for-go).
 
-> **Status:** early scaffold. The provider builds and serves its
-> configuration schema, but no resources or data sources are implemented
-> yet — they're blocked on the underlying Go SDK, which doesn't have a
-> client implementation to wire up yet either.
+> **Status:** early days. The provider currently implements the
+> `omada_site` resource; more resources and data sources are added as the
+> underlying Go SDK grows support for them.
 
 ## Requirements
 
@@ -19,6 +18,7 @@ Terraform provider for the TP-Link Omada Controller API, built on
 ```console
 just build   # build the provider binary into ./bin
 just test    # run unit tests
+just testacc # run acceptance tests, including the Gherkin scenarios in internal/provider/features/, against a real controller (requires OMADA_* env vars)
 just lint    # go vet + golangci-lint
 just docs    # regenerate docs/ from the schema and templates/
 just check   # fmt + lint + docs + test, mirrors CI
@@ -42,6 +42,12 @@ provider "omada" {
 `OMADA_HOST`, `OMADA_CLIENT_ID`, `OMADA_CLIENT_SECRET`, and `OMADA_OMADAC_ID`
 environment variables — recommended so credentials stay out of configuration
 files. See [`docs/index.md`](docs/index.md) for the full schema.
+
+## Resources
+
+- `omada_site` — manages a site, the top-level container for a location's
+  devices and clients. See
+  [`docs/resources/site.md`](docs/resources/site.md).
 
 ## Security
 
