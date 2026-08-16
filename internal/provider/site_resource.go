@@ -3,6 +3,7 @@ package provider
 import (
 	"context"
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/hashicorp/terraform-plugin-framework/diag"
@@ -194,7 +195,11 @@ func (r *SiteResource) Create(ctx context.Context, req resource.CreateRequest, r
 	site.SetName(&name)
 
 	if !plan.Type.IsNull() {
-		t := int32(plan.Type.ValueInt64())
+		t, diags := int32FromInt64(plan.Type.ValueInt64(), path.Root("type"))
+		resp.Diagnostics.Append(diags...)
+		if resp.Diagnostics.HasError() {
+			return
+		}
 		site.SetTypeEscaped(&t)
 	}
 	if !plan.Region.IsNull() {
@@ -511,4 +516,19 @@ func boolOrNull(v *bool) types.Bool {
 		return types.BoolNull()
 	}
 	return types.BoolValue(*v)
+}
+
+// int32FromInt64 narrows v to an int32, returning an attribute-scoped error
+// diagnostic instead of silently overflowing if v is out of int32 range.
+func int32FromInt64(v int64, attr path.Path) (int32, diag.Diagnostics) {
+	var diags diag.Diagnostics
+	if v < math.MinInt32 || v > math.MaxInt32 {
+		diags.AddAttributeError(
+			attr,
+			"Value Out Of Range",
+			fmt.Sprintf("value %d does not fit in a 32-bit integer (must be between %d and %d).", v, math.MinInt32, math.MaxInt32),
+		)
+		return 0, diags
+	}
+	return int32(v), diags
 }
