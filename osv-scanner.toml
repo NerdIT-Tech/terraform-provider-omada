@@ -1,0 +1,13 @@
+# Vulnerability ignore list for OSV-Scanner / OpenSSF Scorecard's
+# Vulnerabilities check. See https://github.com/google/osv-scanner#ignore-vulnerabilities-by-id.
+
+[[IgnoredVulns]]
+id = "GO-2026-5932"
+reason = """
+Advisory flags golang.org/x/crypto/openpgp as unmaintained/unsafe. We only
+pull in golang.org/x/crypto transitively (via terraform-plugin-docs ->
+hashicorp/cli -> Masterminds/sprig/v3, for x/crypto/bcrypt); the openpgp
+package is never imported. `govulncheck ./...` confirms no reachable
+vulnerable symbols. Re-evaluate if a direct or transitive dependency on
+x/crypto/openpgp is ever introduced.
+"""

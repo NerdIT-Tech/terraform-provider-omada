@@ -1,0 +1,13 @@
+# Hash-pinned pip requirements for the yamllint job in lint-workflows.yml.
+# Only sdist hashes are listed (not pre-built wheels) so this file stays
+# valid regardless of which Python build ubuntu-latest ships; PyYAML builds
+# its optional C extension only if libyaml is present and otherwise falls
+# back to a pure-Python implementation, so no extra system packages are
+# required. Regenerate with each version bump by fetching the sdist sha256
+# from https://pypi.org/pypi/<package>/<version>/json.
+yamllint==1.37.1 \
+    --hash=sha256:81f7c0c5559becc8049470d86046b36e96113637bcbe4753ecef06977c00245d
+pathspec==1.1.1 \
+    --hash=sha256:17db5ecd524104a120e173814c90367a96a98d07c45b2e10c2f3919fff91bf5a
+pyyaml==6.0.3 \
+    --hash=sha256:d76623373421df22fb4cf8817020cbb7ef15c725b9d5e45f17e189bfc384190f

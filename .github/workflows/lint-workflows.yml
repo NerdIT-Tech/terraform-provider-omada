@@ -51,7 +51,7 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
       - name: Install yamllint
-        run: pip install --disable-pip-version-check yamllint==1.37.1
+        run: pip install --disable-pip-version-check --require-hashes -r .github/workflows/lint-requirements.txt
 
       - name: Run yamllint
         run: yamllint -c .yamllint.yml .
